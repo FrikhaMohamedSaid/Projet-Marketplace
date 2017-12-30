@@ -1,0 +1,21 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+
+{% block css_styles %}
+    <link rel="stylesheet" href="{% static 'Admin/css/custom.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="wrapper">
+        {% include 'BaseAdmin/top.html' %}
+        {% include 'BaseAdmin/left_Bar.html' %}
+        {% block contenu_admin %}{% endblock %}
+    </div>
+{% endblock %}
+
+
+{% block js_scripts %}
+    <script src="{% static 'Admin/js/jquery.metisMenu.js' %}"></script>
+    <script src="{% static 'Admin/js/custom.js' %}"></script>
+{% endblock %}

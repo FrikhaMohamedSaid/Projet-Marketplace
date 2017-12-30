@@ -1,0 +1,55 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+
+{% block title %} Liste Boutiques {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Liste Boutiques" chemin_page="Vendeur Pro" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" id="blog-listing-small">
+                    <div class="row row-flex">
+
+                        {% for boutique in boutiques %}
+                            <div class="col-md-3 col-sm-6 {% if not forloop.counter0|divisibleby:3 %}col-md-offset-1{% endif %}">
+                                <div class="shop">
+                                    <div class="box-image-text blog">
+                                        <div class="top">
+                                            <div class="image">
+                                                <img src="{% static boutique.logo_bout.url %}" class="img-responsive">
+                                            </div>
+                                            <div class="bg"></div>
+                                            <div class="text">
+                                                <p class="buttons">
+                                                    <a href="{% url "R_Boutique" boutique_id=boutique.id %}"
+                                                       class="btn btn-template-transparent-primary">
+                                                        <i class="fa fa-link"></i>Profil {{ boutique.nom_bout|upper }}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <h4>
+                                                <a href="{% url "R_Boutique" boutique_id=boutique.id %}">{{ boutique.nom_bout|capfirst }}</a>
+                                            </h4>
+                                            <p class="author-category"><a>{{ boutique.produit_set.all|length }}</a>
+                                                Produits en vente actuellement
+                                            </p>
+                                            <p class="text-justify">{{ boutique.description_bout|truncatechars:120 }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

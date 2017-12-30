@@ -1,0 +1,45 @@
+{% extends 'Base/base.html' %}
+
+{% block title %} Authentification {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Authentification" chemin_page="Connecter" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="box">
+                        <h2 class="text-uppercase text-center">Connecter</h2>
+
+                        <p class="lead text-center">Déjà notre client?</p>
+                        {{ form.non_field_errors }}
+                        <hr>
+
+                        <form method="post" role="form" action="{% url "Connexion" %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+                            <div class="form-group">
+                                <label for="email">{{ form.username.label }}</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{ form.password.label }}</label>
+                                {{ form.password }}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-template-main">
+                                    <i class="fa fa-sign-in"></i> Connecter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </div>
+{% endblock %}

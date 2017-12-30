@@ -1,0 +1,206 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+
+{% block title %} Formulaire Produit {% endblock %}
+
+{% block contenu %}
+    {% if id %}
+        {% with titre_page="Formulaire Modification Produit" chemin_page="Mon Espace Marketplace > Mes Produit > Modifier" %}
+            {% include 'Base/titre_pages.html' %}
+        {% endwith %}
+    {% else %}
+        {% with titre_page="Formulaire Ajout Produit" chemin_page="Mon Espace Marketplace > Mes Produit > Nouveau Produit" %}
+            {% include 'Base/titre_pages.html' %}
+        {% endwith %}
+    {% endif %}
+
+    <div id="content" class="clearfix">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-8 clearfix" id="customer-account">
+
+                    <div class="heading">
+                        <h3 class="text-uppercase">{{ form.titre_prod.value|default_if_none:"Nouveau Produit" }}</h3>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-12"><h4>{{ 'Detail de base'|upper }}</h4></div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{ form.titre_prod.label }}</label>
+                                    {{ form.titre_prod }}
+                                    {{ form.titre_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.ref_prod.label }}</label>
+                                    {{ form.ref_prod }}
+                                    {{ form.ref_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.categorie_prod_id.label }}</label>
+                                    {{ form.categorie_prod_id }}
+                                    {{ form.categorie_prod_id.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.marque_prod_id.label }}</label>
+                                    {{ form.marque_prod_id }}
+                                    {{ form.marque_prod_id.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.quantite_stock_prod.label }}</label>
+                                    {{ form.quantite_stock_prod }}
+                                    {{ form.quantite_stock_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.prix_original_prod.label }}</label>
+                                    {{ form.prix_original_prod }}
+                                    {{ form.prix_original_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.pourcentage_solde_prod.label }}</label>
+                                    {{ form.pourcentage_solde_prod }}
+                                    {{ form.pourcentage_solde_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.condition_prod.label }}</label>
+                                    {{ form.condition_prod }}
+                                    {{ form.condition_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.image_prod.label }}</label>
+                                    {{ form.image_prod }}
+                                    {{ form.image_prod.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{ form.description_prod.label }}</label>
+                                    {{ form.description_prod }}
+                                    {{ form.description_prod.errors }}
+                                </div>
+                            </div>
+                            <div id="formset">
+                                <div class="col-sm-12">
+                                    <h4>{{ 'Specification'|upper }}</h4>
+                                    {{ formset.management_form }}
+                                </div>
+                                {% for forms in formset %}
+                                    <div class="col-sm-1">
+                                        <div class="form-group">
+                                            <div style="display: table-cell;">
+                                        <label class="switch">
+                                            {{ forms.DELETE }}
+                                            <div class="slider v_r">
+                                                <span class="on">
+                                                    <i class="fa fa-times fa-2x"></i>
+                                                </span>
+                                                <span class="off">
+                                                    <i class="fa fa-check fa-2x"></i>
+                                                </span>
+                                            </div>
+                                        </label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-group">
+                                            <label>{{ forms.kle_spec_prod.label }}</label>
+                                            {{ forms.kle_spec_prod }}
+                                            {{ forms.kle_spec_prod.errors }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>{{ forms.valeur_spec_prod.label }}</label>
+                                            {{ forms.valeur_spec_prod }}
+                                            {{ forms.valeur_spec_prod.errors }}
+                                        </div>
+                                    </div>
+                                    {{ forms.id }}
+                                {% endfor %}
+                            </div>
+
+                            <br>
+                            <div class="col-sm-6 text-left">
+                                <button type="button" class="btn btn-template-main" id="add_form">
+                                    <i class="fa fa-save"></i> Ajouter un autre specification
+                                </button>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                {% if id %}
+                                    <button type="submit" class="btn btn-template-main"
+                                            formaction="{% url "U_Produit" produit_id=id %}">
+                                        <i class="fa fa-plus"></i> Enregistrer les modifications
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-template-main"
+                                            formaction="{% url "C_Produit" %}">
+                                        <i class="fa fa-save"></i> Ajouter
+                                    </button>
+                                {% endif %}
+
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                {#                {% with boutique_info=True %}#}
+                {% include 'Customer/menu compte_vendeur.html' %}
+                {#                {% endwith %}#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_scripts %}
+    <script>
+        var form_count = {{formset.total_form_count}};
+        $('#add_form').click(function (e) {
+            e.preventDefault();
+            var new_form = '<div class="col-sm-1"> ' +
+                '<div class="form-group"> ' +
+                '<div style="display: table-cell;"> ' +
+                '<label class="switch"> {{ formset.empty_form.DELETE|escapejs }} <div class="slider v_r"> ' +
+                '<span class="on"> ' +
+                '<i class="fa fa-times fa-2x"></i> ' +
+                '</span> ' +
+                '<span class="off"> ' +
+                '<i class="fa fa-check fa-2x"></i> ' +
+                '</span> </div> </label> </div> </div> </div> ' +
+                '<div class="col-sm-5"> ' +
+                '<div class="form-group"> ' +
+                '<label>{{ formset.empty_form.kle_spec_prod.label|escapejs }}</label> {{ formset.empty_form.kle_spec_prod|escapejs }} {{ formset.empty_form.kle_spec_prod.errors|escapejs }} </div> </div>' +
+                '<div class="col-sm-6"> ' +
+                '<div class="form-group"> ' +
+                '<label>{{ formset.empty_form.valeur_spec_prod.label|escapejs }}</label> {{ formset.empty_form.valeur_spec_prod|escapejs }} {{ formset.empty_form.valeur_spec_prod.errors|escapejs }} </div> </div> {{ formset.empty_form.id }}'
+            new_form = new_form.replace(/__prefix__/g, form_count);
+            form_count++;
+            $('#formset').append(new_form);
+            $('#id_form-TOTAL_FORMS').val(form_count);
+        });
+    </script>
+{% endblock %}

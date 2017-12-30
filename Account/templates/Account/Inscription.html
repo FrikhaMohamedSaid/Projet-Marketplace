@@ -1,0 +1,127 @@
+{% extends 'Base/base.html' %}
+
+{% block title %} Inscription {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Nouveau compte" chemin_page="Créer Compte" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box">
+                        <h2 class="text-uppercase text-center">Client Simple</h2>
+
+                        <hr>
+
+                        <form action="{% url 'AcheteurInscri' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>{{ acheteur_form.last_name.label }}</label>
+                                {{ acheteur_form.last_name }}
+                                {{ acheteur_form.last_name.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ acheteur_form.first_name.label }}</label>
+                                {{ acheteur_form.first_name }}
+                                {{ acheteur_form.first_name.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ acheteur_form.email.label }}</label>
+                                {{ acheteur_form.email }}
+                                {{ acheteur_form.email.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ acheteur_form.username.label }}</label>
+                                {{ acheteur_form.username }}
+                                {{ acheteur_form.username.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ acheteur_form.password.label }}</label>
+                                {{ acheteur_form.password }}
+                                {{ acheteur_form.password.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ acheteur_form.re_password.label }}</label>
+                                {{ acheteur_form.re_password }}
+                                {{ acheteur_form.re_password.errors }}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-template-main">
+                                    <i class="fa fa-user-md"></i>Inscrire
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="box">
+                        <h2 class="text-uppercase text-center">Vendeur Pro</h2>
+
+                        <hr>
+
+                        <form action="{% url 'VendeurInscri' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="email">{{ vendeur_form.last_name.label }}</label>
+                                {{ vendeur_form.last_name }}
+                                {{ vendeur_form.last_name.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{ vendeur_form.first_name.label }}</label>
+                                {{ vendeur_form.first_name }}
+                                {{ vendeur_form.first_name.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{ vendeur_form.email.label }}</label>
+                                {{ vendeur_form.email }}
+                                {{ vendeur_form.email.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{ vendeur_form.registre_commerce_bout.label }}</label>
+                                {{ vendeur_form.registre_commerce_bout }}
+                                {{ vendeur_form.registre_commerce_bout.errors }}
+                            </div>
+                            <p class="text-muted text-info text-center">Votre demande sera traiter par notre administrateur, une réponse sera
+                            envoyer par mail sur l'adresse saisie dessus dans 72h.
+                            <br>
+                            Merci pour votre confiance.</p>
+                            <br>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-template-main">
+                                    <i class="fa fa-sign-in"></i> Passer la demande
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+    </div>
+
+{% endblock %}
+
+<form role="form" method="post">
+
+    <br>
+
+    <br>
+    {{ form.email.errors }}
+    {{ form.email.label }}
+    {{ form.email }}
+    <br>
+    {{ form.registre_commerce_bout.errors }}
+    {{ form.registre_commerce_bout.label }}
+    {{ form.registre_commerce_bout }}
+    <br>
+    <button type="submit" formaction="{% url "VendeurInscri" %}">Passer la demande</button>
+
+</form>

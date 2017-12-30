@@ -1,0 +1,349 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+{% load mathfilters %}
+{% load filtre %}
+
+{% block title %} Detail Produit {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Detail Produit" chemin_page="Tous Les Produits > "|add:produit.titre_prod|capfirst %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="heading">
+                        <h3>{{ produit.titre_prod|capfirst }}</h3>
+                        {% if user.vendeur.id == produit.boutique_prod_id.vendeur_bout_id.id %}
+                            <a href="{% url "U_Produit" produit_id=produit.id %}">
+                                <button class="btn btn-lg btn-warning right" style="margin-top: 20px">
+                                    Modifier Produit
+                                </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <p class="text-justify">{{ produit.description_prod|linebreaks }}</p>
+                    <p class="goToDescription">
+                        <a href="#details" class="scroll-to text-uppercase">Voir le descriptif technique</a>
+                    </p>
+
+                    <div class="row" id="productMain">
+                        <div class="col-sm-6">
+                            <div id="mainImage">
+                                <img src="{% static produit.image_prod.url %}" alt="" class="img-responsive">
+                            </div>
+
+                            {% if produit.pourcentage_solde_prod %}
+                                <div class="ribbon sale">
+                                    <div class="theribbon">Remise</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                <div class="ribbon new">
+                                    <div class="theribbon">
+                                        {{ produit.pourcentage_solde_prod.normalize }} %
+                                    </div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                            {% endif %}
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="box">
+
+                                <form>
+                                    {% if produit.nbr_avis_prod %}
+                                        <span style="font-weight: bold;color: #f90;">
+                                        {% for i in ''|rjust:produit.note_avis_prod %}
+                                            <img src="{% static 'image/etoile.png' %}">
+                                        {% endfor %}
+                                            &nbsp;&nbsp;
+                                            {{ produit.note_avis_prod|floatformat:"2" }}/5</span>
+                                        &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+                                        <span class="text-muted">({{ produit.nbr_avis_prod }} Votes)</span>
+                                        <br>
+                                        <br>
+                                    {% endif %}
+                                    <label>Vendu et expédié par :</label>
+                                    <a href="{% url 'R_Boutique' boutique_id=produit.boutique_prod_id.id %}">
+                                        {{ produit.boutique_prod_id.nom_bout }}
+                                    </a>
+                                    <hr>
+                                    {% if produit.pourcentage_solde_prod %}
+                                        {% if produit.pourcentage_solde_prod %}
+                                            <div>
+                                                <label><h4>Prix : </h4></label>
+                                                <del>{{ produit.prix_original_prod }} TND / pièce</del>
+                                            </div>
+                                            <div>
+                                                <label><h4>Prix réduit : </h4></label>
+                                                {% with remise=produit.prix_original_prod|mul:produit.pourcentage_solde_prod|div:100 %}
+                                                    <span class="price">{{ produit.prix_original_prod|sub:remise|floatformat:"-3" }}
+                                                        TND / pièce</span>
+                                                {% endwith %}
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div>
+                                            <label><h4>Prix : </h4></label>
+                                            <span class="price">{{ produit.prix_original_prod }} TND / pièce</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="bar_wrap">
+                                        <div class="bar_wrap_cont"
+                                             style="width: {{ produit.quantite_vendue_prod|div:produit.quantite_stock_prod|mul:100|stringformat:"f" }}%;"></div>
+                                        <div class="bar_wrap_label">
+                                            {{ produit.quantite_vendue_prod }}/{{ produit.quantite_stock_prod }} vendue
+                                        </div>
+                                    </div>
+
+                                    <p class="text-center">
+                                        <a href="{% url "Add_Panier" produit_id=produit.id %}">
+                                            <button type="button" class="btn btn-template-main">
+                                                <i class="fa fa-shopping-cart"></i> Ajouter au Panier
+                                            </button>
+                                        </a>
+                                        <button class="btn btn-default" data-toggle="tooltip" style="color: #ff3d69;"
+                                                data-placement="top" id="btn-fav" title="Ajouter au favorie">
+                                            {% with is_fav=False %}
+                                                {% for favori in produit.produit_favori_set.all %}
+                                                    {% if favori.acheteur_fav_id.id == user.id %}
+                                                        <i class="fa fa-heart"></i>
+                                                        {% update_value True as is_fav %}
+                                                    {% endif %}
+                                                    {% if forloop.last %}
+                                                        {% if not is_fav %}
+                                                            <i class="fa fa-heart-o"></i>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% empty %}
+                                                    <i class="fa fa-heart-o"></i>
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </button>
+                                    </p>
+
+                                </form>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row" id="details">
+                        <div class="col-md-12">
+                            <div class="tabs">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li class="active"><a href="#tab5-1" data-toggle="tab"><i class="icon-star"></i>Description
+                                        Technique</a>
+                                    </li>
+                                    <li class=""><a href="#tab5-2" data-toggle="tab">Avis client</a>
+                                    </li>
+                                    {% if user.acheteur %}
+                                        <li class="">
+                                            <a href="#tab5-3" data-toggle="tab">Ajouter/Modifier Votre Avis</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5-1">
+                                        <h4> Informations générales sur le produit </h4>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <table class="table table-responsive table-hover">
+                                                    <tbody>
+                                                    <tr>
+                                                        <th width="33%">Marque</th>
+                                                        <td>{{ produit.marque_prod_id }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th width="33%">Référence</th>
+                                                        <td>{{ produit.ref_prod }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th width="33%">Condition</th>
+                                                        <td>{{ produit.get_condition_prod_display }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                {% if specifications %}
+                                                    <h4> Informations supplémentaire </h4>
+
+                                                    <table class="table table-responsive table-hover">
+
+                                                        <tbody>
+                                                        {% for key, value in specifications.items %}
+                                                            <tr>
+                                                                <th width="33%">{{ key|upper }}</th>
+                                                                <td>{{ value|capfirst }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab5-2">
+                                        <table class="table table-responsive" id="table_avis">
+                                            <tbody>
+                                            {% for avis in aviss %}
+                                                <tr id="user-{{ avis.acheteur_avis_id.id }}-avis">
+                                                    <td width="20%">
+                                                        <h4>
+                                                            {% for i in ''|rjust:avis.note_avis %}
+                                                                <img src="{% static 'image/etoile.png' %}">
+                                                            {% endfor %}
+                                                        </h4>
+                                                    </td>
+                                                    <td>
+                                                        <h4>
+                                                            {{ avis.acheteur_avis_id.last_name }} {{ avis.acheteur_avis_id.first_name }}
+                                                            {% if user.id == avis.acheteur_avis_id.id %}
+                                                                {#                                                                <a class="btn btn-xs btn-danger pull-right"#}
+                                                                {#                                                                   onclick="d_avis({{ avis.id }})">#}
+                                                                <a class="btn btn-xs btn-danger pull-right"
+                                                                   href="{% url 'D_Avis' avis_id=avis.id %}">
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                    <span class="hidden-sm">Supprimer</span>
+                                                                </a>
+                                                            {% endif %}
+                                                        </h4>
+                                                        <p class="text-justify">{{ avis.commantaire_avis|linebreaks }}</p>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {% if user.acheteur %}
+                                        <div class="tab-pane" id="tab5-3">
+                                            {#                                            <form method="post" id="avis_form_id" oninput="level.value=note_avis.value"#}
+                                            <form method="post" oninput="level.value=note_avis.value"
+                                                  action="{% url 'Add_U_Avis' produit_id=produit.id %}">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-md-1">
+                                                        <div class="form-group">
+                                                            <label>{{ form.note_avis.label }}</label>
+                                                            {{ form.note_avis }}
+                                                            {{ form.note_avis.errors }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <output for="Prix" name="level"
+                                                                class="ratingValue">{{ form.note_avis.value|default:"3" }}</output>
+                                                    </div>
+                                                    <div class="col-sm-6 col-md-9 col-md-offset-1">
+                                                        <div class="form-group">
+                                                            <label>{{ form.commantaire_avis.label }}</label>
+                                                            {{ form.commantaire_avis }}
+                                                            {{ form.commantaire_avis.errors }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-12 text-center">
+                                                        <button type="submit" class="btn btn-template-main">
+                                                            <i class="fa fa-save"></i> Confirmer Avis
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_scripts %}
+    {#    <script>#}
+    {#        $('#avis_form_id').on('submit', function (e) {#}
+    {#            e.preventDefault();#}
+    {#            note_avis_ajax = $('#id_note_avis').val();#}
+    {#            commantaire_avis_ajax = $('#id_commantaire_avis').val();#}
+    {#            $.ajax({#}
+    {#                type: 'POST',#}
+    {#                url: '{% url "Add_U_Avis" produit_id=produit.id %}',#}
+    {#                data: {#}
+    {#                    note_avis: note_avis_ajax,#}
+    {#                    commantaire_avis: commantaire_avis_ajax,#}
+    {#                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()#}
+    {#                },#}
+    {#                success: function (data) {#}
+    {#                    if (data.created == true) {#}
+    {#                        var html = '<tr><td width="20%">'#}
+    {#                        for (var i = 0; i < note_avis_ajax; i++) {#}
+    {#                            html += '<img src="{% static 'image/etoile.png' %}">'#}
+    {#                        }#}
+    {#                        html += '</td><td><h4> {{ user.acheteur.last_name }} {{ user.acheteur.first_name }} ' +#}
+    {#                            '<a class="btn btn-xs btn-danger pull-right" onclick="d_avis(' + data.new_avis_id + ')"> <i class="fa fa-times-circle"></i> <span class="hidden-sm">Supprimer</span> </a></h4>' +#}
+    {#                            '<p class="text-justify">' + commantaire_avis_ajax + '</p></td></tr>'#}
+    {#                        $('#table_avis > tbody:last-child').append(html);#}
+    {#                        alert("avis ajouter")#}
+    {#                    } else {#}
+    {#                        var html = '<td width="20%">'#}
+    {#                        for (var i = 0; i < note_avis_ajax; i++) {#}
+    {#                            html += '<img src="{% static 'image/etoile.png' %}">'#}
+    {#                        }#}
+    {#                        html += '</td><td><h4> {{ user.acheteur.last_name }} {{ user.acheteur.first_name }} ' +#}
+    {#                            '<a class="btn btn-xs btn-danger pull-right" onclick="d_avis(' + data.new_avis_id + ')"> <i class="fa fa-times-circle"></i> <span class="hidden-sm">Supprimer</span> </a></h4>' +#}
+    {#                            '<p class="text-justify">' + commantaire_avis_ajax + '</p></td>'#}
+    {#                        $('#user-{{ user.id }}-avis').html(html);#}
+    {#                        alert("avis modifier")#}
+    {#                    }#}
+    {#                }#}
+    {#            });#}
+    {#        });#}
+    {##}
+    {#        function d_avis(avis_id_ajax) {#}
+    {#            $.ajax({#}
+    {#                type: 'POST',#}
+    {#                url: '{% url "D_Avis"%}',#}
+    {#                data: {#}
+    {#                    avis_id: avis_id_ajax,#}
+    {#                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()#}
+    {#                },#}
+    {#                success: function (data) {#}
+    {#                    if (data.delete == true) {#}
+    {#                        $('#user-{{ user.id }}-avis').remove();#}
+    {#                    }#}
+    {#                }#}
+    {#            });#}
+    {#        }#}
+
+    <script>
+        $('#btn-fav').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{% url "Add_Favori" %}',
+                data: {
+                    produit_id: {{ produit.id }}
+                },
+                success: function (data) {
+                    if (data.created == true) {
+                        $('#btn-fav > i').removeClass('fa-heart-o')
+                        $('#btn-fav > i').addClass('fa-heart')
+                        alert("produit ajouter au favori")
+                    } else {
+                        $('#btn-fav > i').removeClass('fa-heart')
+                        $('#btn-fav > i').addClass('fa-heart-o')
+                        alert("produit retirer du favori")
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

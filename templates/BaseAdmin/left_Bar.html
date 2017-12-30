@@ -1,0 +1,47 @@
+<nav class="navbar-default navbar-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="main-menu">
+            <li class="text-center user-image-back">
+                <img src="assets/img/find_user.png" class="img-responsive"/>
+
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-sitemap "></i>Gestion des Pays<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{% url 'R_Pays' %}"><i class="fa fa-eye"></i>Consulter</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'C_Pays' %}"><i class="fa fa-plus"></i>Ajouter</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-sitemap "></i>Gestion des Marques<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{% url 'R_Marque' %}"><i class="fa fa-eye"></i>Consulter</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'C_Marque' %}"><i class="fa fa-plus"></i>Ajouter</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-sitemap "></i>Gestion des Catégoris<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{% url 'R_Categorie' %}"><i class="fa fa-eye"></i>Consulter</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'C_Categorie' %}"><i class="fa fa-plus"></i>Ajouter</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="{% url 'R_Demande_Vendeur' %}"><i class="fa fa-desktop "></i>Demande de Compte</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>

@@ -1,0 +1,168 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+{% load mathfilters %}
+
+{% block title %} Liste des Produits {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Liste des Produits" chemin_page="Tous Les Produits" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-sm-3">
+
+                    <!-- *** MENUS AND FILTERS *** -->
+                    <form action="{% url "F_Produit_Bar" %}" oninput="level.value=prix_min_prod.value">
+                        <div class="panel panel-default sidebar-menu">
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title">AFFINER PAR</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked category-menu">
+                                    <li>
+                                        <a>{{ filterForm.categorie_prod.label }}</a>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                {{ filterForm.categorie_prod }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a>{{ filterForm.prix_min_prod.label }}
+                                            <span class="badge pull-right" name="level">
+                                                    {{ filterForm.prix_min_prod.value|default:0 }}
+                                            </span>
+                                        </a>
+                                        <output for="Prix" name="level">
+                                            {{ filterForm.prix_min_prod.value|default:0 }}
+                                        </output>
+                                        {{ filterForm.prix_min_prod }}
+                                        <br>
+                                    </li>
+                                    <li>
+                                        <a>{{ filterForm.condition_prod.label }}</a>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                {% for form in filterForm.condition_prod %}
+                                                    <div class="checkbox">
+                                                        {{ form }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a>{{ filterForm.marque_prod.label }}</a>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                {% for form in filterForm.marque_prod %}
+                                                    <div class="checkbox">
+                                                        {{ form }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a>{{ filterForm.avis_prod.label }}</a>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                {% for form in filterForm.avis_prod %}
+                                                    <div class="checkbox">
+                                                        {{ form }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="col-sm-9">
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-5 right">
+                            <div class="col-sm-4">
+                                <label>{{ sortForm.select_sort_prod.label }} :</label>
+                            </div>
+                            <div class="col-sm-8 no-padding">
+                                <form action="{% url 'Sort_Produit' %}" method="get">
+                                    {{ sortForm.select_sort_prod }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row products row-flex">
+
+                        {% for produit in produits %}
+                            <div class="col-md-4 col-sm-6">
+                                <div class="product">
+                                    <div class="image">
+                                        <a href="{% url "R_One_Produit" produit_id=produit.id %}">
+                                            <img src="{% static produit.image_prod.url %}"
+                                                 class="img-responsive image1">
+                                        </a>
+                                    </div>
+                                    <!-- /.image -->
+                                    <div class="text">
+                                        <h3>
+                                            <a href="{% url "R_One_Produit" produit_id=produit.id %}">{{ produit.titre_prod|capfirst }}</a>
+                                        </h3>
+                                        <p class="price">
+                                            {% if produit.pourcentage_solde_prod %}
+                                                <del>{{ produit.prix_original_prod.normalize }} TND</del>
+                                                {% with remise=produit.prix_original_prod|mul:produit.pourcentage_solde_prod|div:100 %}
+                                                    {{ produit.prix_original_prod|sub:remise|floatformat:"-3" }}
+                                                    TND
+                                                {% endwith %}
+                                            {% else %}
+                                                {{ produit.prix_original_prod }} TND
+                                            {% endif %}
+                                        </p>
+
+                                        <a href="{% url "Add_Panier" produit_id=produit.id %}"
+                                           class="btn btn-template-main">
+                                            <i class="fa fa-shopping-cart"></i>Ajouter au panier
+                                        </a>
+
+                                    </div>
+                                    <!-- /.text -->
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <!-- /.products -->
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_scripts %}
+    <script>
+        $(function () {
+            if (jQuery('input[name=avis_prod]:checked').length > 0) {
+                $('input[name=avis_prod]:checked').parent().css('font-weight', "bold");
+            }
+        });
+    </script>
+{% endblock %}

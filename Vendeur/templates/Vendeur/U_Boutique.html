@@ -1,0 +1,94 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+
+{% block title %} Description Boutique {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Description Boutique" chemin_page="Mon Espace Marketplace >  Les Information du Boutique" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content" class="clearfix">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-8 clearfix" id="customer-account">
+
+                    <div class="heading">
+                        <h3 class="text-uppercase"> Description Boutique </h3>
+                        <a href="{% url "R_Boutique" boutique_id=user.vendeur.boutique.id %}">
+                            <button class="btn btn-lg btn-info right" style="margin-top: 20px">
+                                Voir Boutique
+                            </button>
+                        </a>
+                    </div>
+
+                    <form method="post" action="{% url "U_Boutique" %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.nom_bout.label }}</label>
+                                    {{ form.nom_bout }}
+                                    {{ form.nom_bout.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <label>{{ form.logo_bout.label }}</label>
+                                    {{ form.logo_bout }}
+                                    {{ form.logo_bout.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="image">
+                                    {% if form.logo_bout.value %}
+                                        <img src="{% static 'files/' %}{{ form.logo_bout.value }}"
+                                             class="img-responsive">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <label>{{ form.adresse_bout.label }}</label>
+                                    {{ form.adresse_bout }}
+                                    {{ form.adresse_bout.errors }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>{{ form.pays_bout_id.label }}</label>
+                                    {{ form.pays_bout_id }}
+                                    {{ form.pays_bout_id.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{ form.description_bout.label }}</label>
+                                    {{ form.description_bout }}
+                                    {{ form.description_bout.errors }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-sm-12 text-center">
+                                <button type="submit" class="btn btn-template-main">
+                                    <i class="fa fa-save"></i> Enregistrer les modifications
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                {% with boutique_info=True %}
+                    {% include 'Customer/menu compte_vendeur.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

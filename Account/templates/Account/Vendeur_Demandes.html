@@ -1,0 +1,72 @@
+{% extends 'BaseAdmin/base.html' %}
+
+{% block contenu_admin %}
+    <div id="page-wrapper">
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="">
+                                <form method="post" action="{% url 'R_Demande_Vendeur' %}">
+                                    {% csrf_token %}
+                                    <table class="table table-hover" id="dataTables">
+
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nom et Prenom</th>
+                                            <th>Code Registre de Commerce</th>
+                                            <th width="100px"></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        {{ formset.management_form }}
+                                        {% for demande, form in zipped %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ demande.first_name }} {{ demande.last_name }}</td>
+                                                <td>{{ demande.registre_commerce_bout }}</td>
+                                                <td>
+                                                    <select name="form-{{ forloop.counter0 }}-etat_demande"
+                                                            id="id_form-{{ forloop.counter0 }}-etat_demande">
+                                                        {% for cle, val in form.fields.etat_demande.choices %}
+                                                            <option value="{{ cle }}"
+                                                                    {% if form.etat_demande.value == cle %}
+                                                                    selected="selected"
+                                                                    {% endif %}
+                                                            >
+                                                                {{ val }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td class="dataTables_empty" colspan="4">
+                                                    Pas de demande a ce moment.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                    <div class="right">
+                                        <button type="submit" class="btn btn-danger btn-bevel right_add_button">
+                                            <i class=" fa fa-check "></i>
+                                            Valider
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

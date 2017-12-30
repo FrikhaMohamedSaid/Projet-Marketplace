@@ -1,0 +1,73 @@
+{% extends 'BaseAdmin/base.html' %}
+
+{% block contenu_admin %}
+    <div id="page-wrapper">
+        <div id="page-inner">
+
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nom</th>
+                                        <th width="300px"></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    {% for pays in payss %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ pays.nom_pays|capfirst }}</td>
+                                            <td class="text-center">
+                                                <a href="{% url "U_Pays" pays_id=pays.id %}">
+                                                    <button class="btn btn-warning btn-sm">
+                                                        <i class=" fa fa-pencil "></i>
+                                                        Modifier
+                                                    </button>
+                                                </a>
+                                                <a href="{% url "D_Pays" pays_id=pays.id %}">
+                                                    <button class="btn btn-danger btn-sm">
+                                                        <i class=" fa fa-times "></i>
+                                                        Supprimer
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+
+                                    {% empty %}
+
+                                        <tr>
+                                            <td class="dataTables_empty" colspan="3">
+                                                Pas encore de Pays ajouter.
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <a href="{% url "C_Pays" %}">
+                            <button class="btn btn-success btn-bevel right_add_button">
+                                <i class=" fa fa-plus "></i>
+                                Nouveau Pays
+                            </button>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% load static %}
+
+<!-- *** TOP *** -->
+<div id="top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-xs-12 contact">
+                <form action="{% url 'F_Produit_Name' %}" method="get">
+                    <button type="submit" class="btn btn-template-main btn-top-search"><i class="fa fa-search"></i>
+                    </button>
+
+                    <input type="text" name="search_text" id="id_search_text" class="form-control top-search">
+                </form>
+            </div>
+            {% if user.id %}
+                <div class="col-md-7 col-xs-12 text-right">
+                    <div class="login">
+                        <a href="{% url 'Deconnexion' %}"><i class="fa fa-user"></i>
+                            <span class="hidden-xs text-uppercase">Déconnexion</span>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-xs-7">
+                    <div class="login">
+                        <a href="{% url 'Connexion' %}"><i class="fa fa-sign-in"></i>
+                            <span class="hidden-xs text-uppercase">Connecter</span>
+                        </a>
+                        <a href="{% url 'AcheteurInscri' %}"><i class="fa fa-user"></i>
+                            <span class="hidden-xs text-uppercase">Créer Compte</span>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- *** TOP END *** -->
+
+
+<!-- *** NAVBAR ***
+    _________________________________________________________ -->
+
+<div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="{% url 'accueil' %}">
+                    <img src="{% static 'image/logo.png' %}" alt="Universal logo" style="max-height: 100%">
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse"
+                            data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                </div>
+            </div>
+            <!--/.navbar-header -->
+
+            <div class="navbar-collapse collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="{% url 'accueil' %}">Accueil</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{% url 'R_All_Produit' %}">Tous Les Produis</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{% url 'R_All_Boutique' %}">Vendeur Pro</a>
+                    </li>
+                    {% if user.id %}
+                        <li class="dropdown">
+                            <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Mon Espace
+                                Marketplace<b
+                                        class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {% if user.acheteur.id %}
+                                    <li {% if count_info %}class="active"{% endif %}>
+                                        <a href="{% url 'U_Profil_Acheteur' %}"> Mes Information de Compte</a>
+                                    </li>
+                                    <li {% if change_password %}class="active"{% endif %}>
+                                        <a href="{% url 'U_MDP' %}"> Sécurité Compte</a>
+                                    </li>
+
+                                    <li {% if favori_produit %}class="active"{% endif %}>
+                                        <a href="{% url 'R_Favori' %}"> Mes Produit Sauvgarder</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'R_Panier' %}"> Mon Panier</a>
+                                    </li>
+                                {% elif user.vendeur.id %}
+                                    <li {% if count_info %}class="active"{% endif %}>
+                                        <a href="{% url 'U_Profil_Vendeur' %}"> Mes Information de Compte</a>
+                                    </li>
+                                    <li {% if change_password %}class="active"{% endif %}>
+                                        <a href="{% url 'U_MDP' %}"> Securité Compte</a>
+                                    </li>
+
+                                    <li {% if boutique_info %}class="active"{% endif %}>
+                                        <a href="{% url 'U_Boutique' %}"> Les Information du Boutique</a>
+                                    </li>
+                                    <li {% if produit_list %}class="active"{% endif %}>
+                                        <a href="{% url 'R_Vendeur_Produit' %}"> Mes Produits</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+            <!--/.nav-collapse -->
+
+
+            <div class="collapse clearfix" id="search">
+
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-btn">
+
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+
+                </span>
+                    </div>
+                </form>
+
+            </div>
+            <!--/.nav-collapse -->
+
+        </div>
+    </div>
+    <!-- /#navbar -->
+
+</div>
+
+<!-- *** NAVBAR END *** -->

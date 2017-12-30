@@ -1,0 +1,112 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+{% load mathfilters %}
+
+{% block title %} Profil Boutique {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Profil Boutique" chemin_page="#" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    {% with produit_all=boutique.produit_set.all %}
+        <div id="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2>{{ boutique.nom_bout|capfirst }} Boutique</h2>
+                            {% if user.vendeur.id == boutique.vendeur_bout_id.id %}
+                                <a href="{% url 'U_Boutique' %}">
+                                    <button class="btn btn-lg btn-warning right" style="margin-top: 20px">Modifier
+                                        Boutique
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row portfolio-project">
+
+                    <section>
+
+                        <div class="col-sm-8">
+                            <div class="item">
+                                <img src="{% static boutique.logo_bout.url %}" class="img-responsive"
+                                     style="max-height: 300px">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="project-more">
+                                <h4>Pays</h4>
+                                <p>{{ boutique.pays_bout_id }}</p>
+                                <h4>Adresse</h4>
+                                <p>{{ boutique.adresse_bout }}</p>
+                                <h4>Nombre Produits</h4>
+                                <p>{{ produit_all|length }}</p>
+                                <h4>Dates Création</h4>
+                                <p>{{ boutique.vendeur_bout_id.date_joined|date }}</p>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <section>
+
+                        <div class="col-sm-12">
+
+                            <div class="heading">
+                                <h3>A Propos De {{ boutique.nom_bout|capfirst }}</h3>
+                            </div>
+
+                            <p class="text-justify">{{ boutique.description_bout|linebreaks }}</p>
+
+                        </div>
+                    </section>
+
+                </div>
+
+                <section>
+                    <div class="row portfolio">
+
+                        <div class="col-md-12">
+                            <div class="heading">
+                                <h3>Quelque Produit du {{ boutique.nom_bout|capfirst }}</h3>
+                            </div>
+                        </div>
+
+                        {% for produit in produit_all|slice:":4" %}
+                            <div class="col-sm-6 col-md-3">
+                                <div class="box-image">
+                                    <div class="image">
+                                        <img src="{% static produit.image_prod.url %}" alt="" class="img-responsive">
+                                    </div>
+                                    <div class="bg"></div>
+                                    <div class="name" style="height: 55%">
+                                        <h3>{{ produit.titre_prod }} -
+                                            {% with remise=produit.prix_original_prod|mul:produit.pourcentage_solde_prod|div:100 %}
+                                                {{ produit.prix_original_prod|sub:remise|floatformat:"-3" }} TND
+                                            {% endwith %}
+                                        </h3>
+                                    </div>
+                                    <div class="text">
+                                        <p class="buttons" style="height: 60%">
+                                            <a href="{% url 'R_One_Produit' produit_id=produit.id %}"
+                                               class="btn btn-template-transparent-primary">Voir</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    {% endwith %}
+{% endblock %}

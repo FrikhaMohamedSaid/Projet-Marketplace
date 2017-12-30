@@ -1,0 +1,68 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+
+{% block title %} Mes Favoris {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Liste d'envies" chemin_page="Mon Espace Marketplace >  Mes Produit Sauvgarder" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content" class="clearfix">
+        <div class="container">
+            <div class="row">
+
+                {% with favori_produit=True %}
+                    {% include 'Customer/menu compte_acheteur.html' %}
+                {% endwith %}
+
+                <div class="col-md-8 col-md-offset-1" id="blog-listing-medium" style="min-height: 55vh">
+
+                    {% for favori_user in favoris_user %}
+
+                        <section class="post">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="image">
+                                        <a href="{% url 'R_One_Produit' produit_id=favori_user.produit_fav_id.id %}">
+                                            <img src="{% static  favori_user.produit_fav_id.image_prod.url %}" class="img-responsive">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h2>
+                                        <a href="{% url 'R_One_Produit' produit_id=favori_user.produit_fav_id.id %}">{{ favori_user.produit_fav_id.titre_prod|capfirst }}</a>
+                                    </h2>
+                                    <div class="clearfix">
+                                        <p class="author-category">
+                                            Magasin: <a href="#">{{ favori_user.produit_fav_id.boutique_prod_id.nom_bout|capfirst }}</a>
+                                            en <a>{{ favori_user.produit_fav_id.boutique_prod_id.pays_bout_id.nom_pays|capfirst }}</a>
+                                        </p>
+                                        <p class="date-comments">
+                                            <span>
+                                                <i class="fa fa-calendar-o"></i>
+                                                {{ favori_user.date_heure_ajout_afv }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <p class="col-md-9 no-padding text-justify">{{ favori_user.produit_fav_id.description_prod|truncatechars:150 }}</p>
+
+                                    <p class="read-more col-md-3">
+                                        <a href="{% url "D_Favori" favori_id=favori_user.id %}" class="btn btn-danger"
+                                        onclick="return(confirm('Etes-vous sûr de vouloir enlever {{ favori_user.produit_fav_id.titre_prod|capfirst }} des favories ?'));">
+                                            <i class="fa fa-times"></i>Enlever
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

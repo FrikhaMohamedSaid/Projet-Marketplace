@@ -1,0 +1,149 @@
+{% extends 'Base/base.html' %}
+
+{% load static %}
+{% load mathfilters %}
+
+{% block title %} Panier {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Votre Panier" chemin_page="Mon Espace Marketplace > Panier" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-muted lead">Vous avez actuellement {{ formset|length }} articles dans votre
+                        panier.</p>
+                </div>
+
+
+                <div class="col-md-9 clearfix" id="basket">
+
+                    <div class="box">
+
+                        <form method="post" action="{% url 'R_Panier' %}">
+                            {% csrf_token %}
+                            {{ formset.management_form }}
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Produit</th>
+                                        <th>Qantité</th>
+                                        <th>Prix Originale</th>
+                                        <th>Remise</th>
+                                        <th colspan="2">Totale</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for panier_user, form in zipped %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url "R_One_Produit" produit_id=panier_user.produit_panier_id.id %}">
+                                                    <img src="{% static panier_user.produit_panier_id.image_prod.url %}"
+                                                         alt="White Blouse Armani">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url "R_One_Produit" produit_id=panier_user.produit_panier_id.id %}">{{ panier_user.produit_panier_id.titre_prod }}</a>
+                                            </td>
+                                            <td>
+                                                {{ form.id }}
+                                                {{ form.acheteur_panier_id }}
+                                                {{ form.produit_panier_id }}
+                                                {{ form.quantite_prod_panier }}
+                                                {{ form.quantite_prod_panier.errors }}
+                                            </td>
+                                            <td>{{ panier_user.produit_panier_id.prix_original_prod.normalize }}
+                                                TND
+                                            </td>
+                                            <td>{{ panier_user.produit_panier_id.pourcentage_solde_prod.normalize }}%</td>
+                                            <td>
+                                                {% with remise=panier_user.produit_panier_id.prix_original_prod|mul:panier_user.produit_panier_id.pourcentage_solde_prod|div:100 %}
+                                                    {% with total_produit=panier_user.produit_panier_id.prix_original_prod|sub:remise|mul:panier_user.quantite_prod_panier %}
+                                                        {{ total_produit|floatformat:"-3" }}
+                                                    {% endwith %}
+                                                    TND
+                                                {% endwith %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url "D_Panier" panier_id=panier_user.id %}">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="5">Total</th>
+                                        <th colspan="2">{{ total_panier }} TND</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                            <!-- /.table-responsive -->
+
+                            <div class="box-footer">
+                                <div class="pull-left">
+                                    <a href="{% url 'R_All_Produit' %}" class="btn btn-default"><i
+                                            class="fa fa-chevron-left"></i>Continuer vos achats</a>
+                                </div>
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-template-main">Passer à la caisse<i
+                                            class="fa fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!-- /.box -->
+
+                </div>
+                <!-- /.col-md-9 -->
+
+                <div class="col-md-3">
+                    <div class="box" id="order-summary">
+                        <div class="box-header">
+                            <h3>Récapitulatif de la commande</h3>
+                        </div>
+                        <p class="text-muted text-center">Les frais de livraison et les coûts supplémentaires sont
+                            calculés en fonction des valeurs que vous avez saisies.</p>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>Ordre Total</td>
+                                    <th>$446.00</th>
+                                </tr>
+                                <tr>
+                                    <td>Frais de livraison</td>
+                                    <th>$10.00</th>
+                                </tr>
+                                <tr>
+                                    <td>Taxe</td>
+                                    <th>$0.00</th>
+                                </tr>
+                                <tr class="total">
+                                    <td>Totale</td>
+                                    <th>$456.00</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

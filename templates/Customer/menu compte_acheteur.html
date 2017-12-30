@@ -1,0 +1,30 @@
+<div class="col-md-3">
+    <div class="panel panel-default sidebar-menu">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">Menu de Compte</h3>
+        </div>
+
+        <div class="panel-body">
+
+            <ul class="nav nav-pills nav-stacked">
+                <li {% if count_info %}class="active"{% endif %}>
+                    <a href="{% url 'U_Profil_Acheteur' %}"><i class="fa fa-user"></i> Mes Information de Compte</a>
+                </li>
+                <li {% if change_password %}class="active"{% endif %}>
+                    <a href="{% url 'U_MDP' %}"><i class="fa fa-user-secret"></i> Sécurité Compte</a>
+                </li>
+
+                <li {% if favori_produit %}class="active"{% endif %}>
+                    <a href="{% url 'R_Favori' %}"><i class="fa fa-heart"></i> Mes Produit Sauvgarder</a>
+                </li>
+                <li>
+                    <a href="{% url 'R_Panier' %}"><i class="fa fa-shopping-cart"></i> Mon Panier</a>
+                </li>
+                <li>
+                    <a href="{% url 'Deconnexion' %}"><i class="fa fa-sign-out"></i> Déconnection</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{% extends 'Base/base.html' %}
+
+{% block title %} Inscription {% endblock %}
+
+{% block body %}
+    <form role="form" method="post">
+        {% csrf_token %}
+        {{ form.last_name.errors }}
+        {{ form.last_name.label }}
+        {{ form.last_name }}
+        <br>
+        {{ form.first_name.errors }}
+        {{ form.first_name.label }}
+        {{ form.first_name }}
+        <br>
+        {{ form.email.errors }}
+        {{ form.email.label }}
+        {{ form.email }}
+        <br>
+        {{ form.username.errors }}
+        {{ form.username.label }}
+        {{ form.username }}
+        <br>
+        {{ form.password.errors }}
+        {{ form.password.label }}
+        {{ form.password }}
+        <br>
+        {{ form.re_password.errors }}
+        {{ form.re_password.label }}
+        {{ form.re_password }}
+        <br>
+        <button type="submit" formaction="{% url 'AcheteurInscri' %}">Inscrire</button>
+
+    </form>
+{% endblock %}

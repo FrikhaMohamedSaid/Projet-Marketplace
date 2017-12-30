@@ -1,0 +1,75 @@
+{% extends 'Base/base.html' %}
+
+{% block title %} Données personnelles {% endblock %}
+
+{% block contenu %}
+    {% with titre_page="Données personnelles" chemin_page="Mon Espace Marketplace > Mes Information de Compte" %}
+        {% include 'Base/titre_pages.html' %}
+    {% endwith %}
+
+    <div id="content" class="clearfix">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-8 clearfix" id="customer-account">
+
+                    <div class="heading">
+                        <h3 class="text-uppercase">Données personnelles</h3>
+                    </div>
+
+                    <form method="post" action="{% url "U_Profil_Vendeur" %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.first_name.label }}</label>
+                                    {{ form.first_name }}
+                                    {{ form.first_name.errors }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.last_name.label }}</label>
+                                    {{ form.last_name }}
+                                    {{ form.last_name.errors }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.username.label }}</label>
+                                    {{ form.username }}
+                                    {{ form.username.errors }}
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{ form.email.label }}</label>
+                                    {{ form.email }}
+                                    {{ form.email.errors }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-sm-12 text-center">
+                                <button type="submit" class="btn btn-template-main">
+                                    <i class="fa fa-save"></i> Enregistrer les modifications
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                {% with count_info=True %}
+                    {% include 'Customer/menu compte_vendeur.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
