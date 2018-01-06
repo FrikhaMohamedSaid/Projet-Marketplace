@@ -76,17 +76,6 @@ def update_panier(request, produit_id):
     )
 
 
-# def change_quantite_panier(request):
-#     # panierForm = PanierForm()
-#     ArticleFormSet = modelformset_factory(
-#         Panier,
-#         form=PanierForm,
-#         extra=0
-#     )
-#     panier_formset = ArticleFormSet(
-#         queryset=panier_user_list
-#     )
-
 
 @never_cache
 @user_passes_test(is_acheteur)
@@ -96,6 +85,14 @@ def read_panier(request):
         acheteur_panier_id_id=request.user.acheteur.id
     )
 
+    total_panier = 0
+    total_item_list = []
+    for panier_user in panier_user_list:
+        total_item = ((panier_user.produit_panier_id.prix_original_prod * panier_user.quantite_prod_panier) *
+                      (100 - panier_user.produit_panier_id.pourcentage_solde_prod)
+                      ) / 100
+        total_panier += total_item
+        total_item_list.append(total_item)
 
     ArticleFormSet = modelformset_factory(
         Panier,
@@ -117,6 +114,7 @@ def read_panier(request):
 
     zipped = zip(
         panier_user_list,
+        total_item_list,
         panier_formset
     )
 
@@ -125,7 +123,8 @@ def read_panier(request):
         'Relation_Acheteur_Article/R_D_Panier.html',
         {
             'zipped': zipped,
-            'formset': panier_formset
+            'formset': panier_formset,
+            'total_panier': total_panier
         }
     )
 
@@ -133,7 +132,11 @@ def read_panier(request):
 @never_cache
 @user_passes_test(is_acheteur)
 def delete_panier(request, panier_id):
-    get_object_or_404(Panier, pk=panier_id).delete()
+    get_object_or_404(
+        Panier,
+        pk=panier_id,
+        acheteur_panier_id=request.user.acheteur.id
+    ).delete()
 
     return HttpResponseRedirect(
         reverse('R_Panier')
@@ -168,7 +171,11 @@ def add_update_avis(request, produit_id):
 @user_passes_test(is_acheteur)
 def delete_avis(request, avis_id):
     # avis_id = request.POST['avis_id']
-    get_object_or_404(Avis, pk=avis_id).delete()
+    get_object_or_404(
+        Avis,
+        pk=avis_id,
+        acheteur_avis_id=request.user.acheteur.id
+    ).delete()
 
     return redirect(request.META['HTTP_REFERER'])
     # return JsonResponse({'delete': True})

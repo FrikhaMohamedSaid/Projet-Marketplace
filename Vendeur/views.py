@@ -120,7 +120,11 @@ def read_boutique(request, boutique_id=0):
 @never_cache
 @user_passes_test(is_vendeur)
 def delete_boutique(request, boutique_id):
-    get_object_or_404(Boutique, pk=boutique_id).delete()
+    get_object_or_404(
+        Boutique,
+        pk=boutique_id,
+        vendeur_bout_id=request.user.vendeur.id
+    ).delete()
 
     return HttpResponse('ok')
 

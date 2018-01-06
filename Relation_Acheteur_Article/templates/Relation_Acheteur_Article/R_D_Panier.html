@@ -40,7 +40,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for panier_user, form in zipped %}
+                                    {% for panier_user, total_item, form in zipped %}
                                         <tr>
                                             <td>
                                                 <a href="{% url "R_One_Produit" produit_id=panier_user.produit_panier_id.id %}">
@@ -63,12 +63,13 @@
                                             </td>
                                             <td>{{ panier_user.produit_panier_id.pourcentage_solde_prod.normalize }}%</td>
                                             <td>
-                                                {% with remise=panier_user.produit_panier_id.prix_original_prod|mul:panier_user.produit_panier_id.pourcentage_solde_prod|div:100 %}
-                                                    {% with total_produit=panier_user.produit_panier_id.prix_original_prod|sub:remise|mul:panier_user.quantite_prod_panier %}
-                                                        {{ total_produit|floatformat:"-3" }}
-                                                    {% endwith %}
-                                                    TND
-                                                {% endwith %}
+                                                {#                                                {% with remise=panier_user.produit_panier_id.prix_original_prod|mul:panier_user.produit_panier_id.pourcentage_solde_prod|div:100 %}#}
+                                                {#                                                    {% with total_produit=panier_user.produit_panier_id.prix_original_prod|sub:remise|mul:panier_user.quantite_prod_panier %}#}
+                                                {#                                                        {{ total_produit|floatformat:"-3" }}#}
+                                                {#                                                    {% endwith %}#}
+                                                {#                                                    TND#}
+                                                {#                                                {% endwith %}#}
+                                                {{ total_item|floatformat:"-3" }} TND
                                             </td>
                                             <td>
                                                 <a href="{% url "D_Panier" panier_id=panier_user.id %}">
@@ -82,7 +83,7 @@
                                     <tfoot>
                                     <tr>
                                         <th colspan="5">Total</th>
-                                        <th colspan="2">{{ total_panier }} TND</th>
+                                        <th colspan="2">{{ total_panier|floatformat:"-3" }} TND</th>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -123,11 +124,11 @@
                                 <tbody>
                                 <tr>
                                     <td>Ordre Total</td>
-                                    <th>$446.00</th>
+                                    <th>{{ total_panier|floatformat:"-3" }} TND</th>
                                 </tr>
                                 <tr>
                                     <td>Frais de livraison</td>
-                                    <th>$10.00</th>
+                                    <th>{{ formset|length|mul:10 }} TND</th>
                                 </tr>
                                 <tr>
                                     <td>Taxe</td>
@@ -135,7 +136,7 @@
                                 </tr>
                                 <tr class="total">
                                     <td>Totale</td>
-                                    <th>$456.00</th>
+                                    <th>{{ formset|length|mul:10|addition:total_panier|floatformat:"-3" }}</th>
                                 </tr>
                                 </tbody>
                             </table>

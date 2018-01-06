@@ -105,7 +105,11 @@ def create_produit(request):
 @never_cache
 @user_passes_test(is_vendeur)
 def update_produit(request, produit_id):
-    produit_obj = get_object_or_404(Produit, pk=produit_id)
+    produit_obj = get_object_or_404(
+        Produit,
+        pk=produit_id,
+        boutique_prod_id__vendeur_bout_id_id=request.user.vendeur.id
+    )
 
     # formulaire du produit simple
     produitForm = ProduitForm(
@@ -191,17 +195,15 @@ def update_produit(request, produit_id):
 @never_cache
 @user_passes_test(is_vendeur)
 def delete_produit(request, produit_id):
-    get_object_or_404(Produit, pk=produit_id).delete()
+    get_object_or_404(
+        Produit,
+        pk=produit_id,
+        boutique_prod_id__vendeur_bout_id_id=request.user.vendeur.id
+    ).delete()
 
     return HttpResponseRedirect(
         reverse('R_Vendeur_Produit')
     )
-
-
-def vendre_produit(request, produit_id, quantite_vendue):
-    produit_obj = get_object_or_404(Produit, pk=produit_id)
-    produit_obj.quantite_vendue_prod += quantite_vendue
-    produit_obj.save()
 
 
 @never_cache
@@ -286,7 +288,7 @@ def read_vendeur_produit(request):
 
 def filter_list_produit_by_name(request):
     # appel des varibales globales pour les modifiers
-    global produit_list_filtred
+    global produit_list_filtred, produit_list
 
     # liste des mots saisies
     list_mots = []
@@ -297,7 +299,7 @@ def filter_list_produit_by_name(request):
         list_mots.append(s_t)
 
     # filter la liste des produits par:
-    produit_list_filtred = produit_list.filter(
+    produit_list_filtred = produit_list = produit_list.filter(
         reduce(
             # opérateur OU
             operator.or_, (

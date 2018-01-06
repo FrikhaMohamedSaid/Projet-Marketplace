@@ -1,9 +1,134 @@
 {% extends 'Base/base.html' %}
 
+{% load static %}
+
 {% block title %} Index {% endblock %}
 
-{% block body %}
-    <div id="all">
+{% block css_styles %}
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.css' %}">
+{% endblock %}
 
-    </div>
+{% block contenu %}
+    <section>
+        <div class="home-carousel">
+            <div class="dark-mask"></div>
+            <div class="container">
+                <div class="homepage owl-carousel">
+                    {% for produit in produits|slice:":4" %}
+                        <div class="item">
+                            <div class="row">
+                                <div class="col-sm-7 text-center">
+                                    <img class="img-responsive" src="{% static produit.image_prod.url %}"
+                                         style="height: 400px">
+                                </div>
+                                <div class="col-sm-5">
+                                    <h2>{{ produit.titre_prod }}</h2>
+                                    <ul class="list-style-none">
+                                        <li>NOTE: {{ produit.note_avis_prod }}/5</li>
+                                        <li>PRIX: {{ produit.prix_original_prod }}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bar background-white no-mb">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="heading text-center">
+                    <h2>Nos boutiques populaires</h2>
+                </div>
+                <div class="row">
+                    {% for boutique in boutiques|slice:":6" %}
+                        <div class="col-md-3 col-sm-3">
+                            <div class="team-member" data-animate="fadeInUp">
+                                <div class="image" style="height: 255px;vertical-align: middle;display: table-cell;">
+                                    <a href="{% url "R_Boutique" boutique_id=boutique.id %}">
+                                        <img src="{% static boutique.logo_bout.url %}" alt="" class="img-responsive img-circle">
+                                    </a>
+                                </div>
+                                <h3><a href="{% url "R_Boutique" boutique_id=boutique.id %}">{{ boutique.nom_bout }}</a></h3>
+                                <p class="role">{{ boutique.pays_bout_id.nom_pays }}</p>
+                                <div class="social">
+                                    <a href="" class="external facebook" data-animate-hover="pulse">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                    <a class="external gplus" data-animate-hover="pulse">
+                                        <i class="fa fa-google-plus"></i>
+                                    </a>
+                                    <a class="external twitter" data-animate-hover="pulse">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                    <a class="email" data-animate-hover="pulse">
+                                        <i class="fa fa-envelope"></i>
+                                    </a>
+                                </div>
+                                <div class="text">
+                                    <p>{{ boutique.description_bout|truncatechars:60 }}</p>
+                                </div>
+                            </div>
+                            <!-- /.team-member -->
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </section>
+
+    <section class="bar background-pentagon no-mb">
+        <div class="container">
+            <div class="row showcase">
+                <div class="col-md-4 col-sm-6">
+                    <div class="item">
+                        <div class="icon"><i class="fa fa-align-justify"></i>
+                        </div>
+                        <h4>
+                            <span class="counter">{{ statistique.nbr_produit }}</span>
+                            <br>
+                            Produits
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="item">
+                        <div class="icon"><i class="fa fa-users"></i>
+                        </div>
+                        <h4>
+                            <span class="counter">{{ statistique.nbr_acheteur }}</span>
+                            <br>
+                            Clients
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="item">
+                        <div class="icon"><i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <h4>
+                            <span class="counter">{{ statistique.nbr_acheteur }}</span>
+                            <br>
+                            Vendeurs Pro
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 {% endblock %}

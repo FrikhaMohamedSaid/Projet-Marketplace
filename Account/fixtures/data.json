@@ -5,7 +5,7 @@
     "fields": {
       "username": "admin",
       "is_superuser": "True",
-      "password": "pbkdf2_sha256$36000$dW3COlQOwuOI$IyuCk/nZ7eZu2UP4JQMzZA+wbdiX50oWeZtpENcOJxw="
+      "password": "pbkdf2_sha256$36000$DD7OvgOiR0uT$n0FLfCTBitf3rtPckyfERNYSa+85eGxPcgeTb8kcQL8="
     }
   }
 ]

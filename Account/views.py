@@ -33,6 +33,7 @@ def connexion(request):
 
     # Personaliser le champs 'password' du formulaire
     authenticationForm.fields['password'].widget.attrs['class'] = "form-control"
+    # authenticationForm.fields['password'].widget.attrs['onpaste'] = "return false;"
     authenticationForm.fields['password'].widget.attrs['placeholder'] = _("Password")
 
     if request.method == 'POST':
